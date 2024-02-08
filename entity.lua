@@ -11,6 +11,10 @@ function Entity:new(x, y, image_path)
     self.last.x = self.x
     self.last.y = self.y
 
+    --agregó una propiedad streng para determinar que objeto entre los que colisionan ejerce mas fuerza
+    --en este caso el player se quedará con este cero.
+    self.strengh = 0
+
 end
 
 
@@ -50,6 +54,15 @@ end
 
 
 function Entity:resolveCollision(e)
+    --Ahora antes de chequear las colisiones, chequeamos que objeto ejerce mas fuerza/resistencia
+    if self.strengh > e.strengh then
+        --si la fuerza del player fuera mayor a la de la pared, entonces la pared seria la que aplique resolveCollision en el player, siendo movida por el player
+        e:resolveCollision(self)
+
+        --una vez que chequeamos esto, salimos de la condicion y seguimos con el codigo
+        return
+    end
+
     if self:checkCollision(e) then
         
         if self:wasVerticallyAligned(e) then
