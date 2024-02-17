@@ -18,18 +18,30 @@ end
 
 
 function love.update(dt)
-    player:update(dt)
-    wall:update(dt)
-   
+   --mediante un loop llamamos update() en cada objeto de la table objects
+    for i,v in ipairs(objects) do 
+    v:update(dt)
+   end
 
-    player:resolveCollision(wall)
+   --Mediante un loop anidado resolvemos las colisiones
+   --en este primer loop recorremos todos los objetos menos el ultimo
+   for i=1, #objects-1 do
+        --en este loop recorremos los objetos empezando por el que le sigue al primer objeto, y esta vez incluimos al ultimo
+        for j=i+1, #objects do
+        --de esta manera no estamos llamando resoveCollision() 2 veces por objeto.    
+        objects[i]:resolveCollision(objects[j])
+        end
+    end
+
 end
 
 
 
 function love.draw()
-    player:draw()
-    wall:draw()
+    --con otro loop dibujamos todos los objetos
+    for i,v in ipairs(objects) do
+        v:draw()
+    end
    
 end
 
