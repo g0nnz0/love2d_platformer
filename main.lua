@@ -6,17 +6,34 @@ function love.load()
     require "box"
 
     player = Player(100, 100)
-    wall = Wall(200, 100)
-    box2 = Box(500, 100)
-    box3 = Box(600, 100)
     box = Box(400,150)
 
     objects = {}
     table.insert(objects, player)
-    table.insert(objects, wall)
-    table.insert(objects, box2)
-    table.insert(objects, box3)
     table.insert(objects, box)
+
+    map = {
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1},
+        {1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1},
+        {1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1},
+        {1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    }
+
+    for i,v in ipairs(map) do
+        for j,w in ipairs(v) do
+            if w==1 then
+                table.insert(objects, Wall((j-1)*50, (i-1)*50))
+            end
+        end
+    end
 end
 
 
