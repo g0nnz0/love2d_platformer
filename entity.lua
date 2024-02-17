@@ -14,6 +14,9 @@ function Entity:new(x, y, image_path)
     --agregó una propiedad streng para determinar que objeto entre los que colisionan ejerce mas fuerza
     --en este caso el player se quedará con este cero.
     self.strength = 0
+    
+    --esta fuerza temporal es la que se sumará a la fuerza de la caja para superar a la del player cuando el player empuje la caja contra la pared.
+    self.tempStrength = 0
 
 end
 
@@ -22,6 +25,8 @@ end
 function Entity:update(dt)
     self.last.x = self.x
     self.last.y = self.y
+
+    self.tempStrength = self.strength
 end
 
 
@@ -55,15 +60,15 @@ end
 
 function Entity:resolveCollision(e)
     --Ahora antes de chequear las colisiones, chequeamos que objeto ejerce mas fuerza/resistencia
-    if self.strength > e.strength then
+    if self.tempStrength > e.tempStrength then
         --si la fuerza del player fuera mayor a la de la pared, entonces la pared seria la que aplique resolveCollision en el player, siendo movida por el player
-        e:resolveCollision(self)
-
         --una vez que chequeamos esto, salimos de la condicion y seguimos con el codigo
-        return
+        return e:resolveCollision(self)
     end
 
     if self:checkCollision(e) then
+
+        self.tempStrength = e.tempStrength
         
         if self:wasVerticallyAligned(e) then
             if self.x + self.width/2 < e.x + e.width/2 then
@@ -82,6 +87,10 @@ function Entity:resolveCollision(e)
                 self.y = self.y + pushback
             end
         end
+        --hubo colision
+        return true
 
     end
+    --de no haber colision return false (tambien podria no retornar nada)
+    return false
 end
