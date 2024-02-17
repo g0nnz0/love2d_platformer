@@ -27,9 +27,13 @@ function love.load()
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
     }
 
+    --por cada tabla(v) en maps...
     for i,v in ipairs(map) do
+        --iterá en cada value(w)...
         for j,w in ipairs(v) do
+            --y chequeá si es igual a 1.
             if w==1 then
+                --si lo es insertá un objeto de tipo Wall en la tabla objects(las posiciones que marca creo que es para que cada wall esté centrada)
                 table.insert(objects, Wall((j-1)*50, (i-1)*50))
             end
         end
