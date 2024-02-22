@@ -27,9 +27,9 @@ function love.load()
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
     }
 
-    --por cada tabla(v) en maps...
+    --por cada tabla(v) en map...
     for i,v in ipairs(map) do
-        --iterá en cada value(w)...
+        --iterá en cada value(w) de cada tabla(v)...
         for j,w in ipairs(v) do
             --y chequeá si es igual a 1.
             if w==1 then
@@ -53,7 +53,7 @@ function love.update(dt)
    local limit = 0
 
    --este loop se encarga de chequear constantemente si hay colision
-   --setenado un limite para no caer en un bucle infinito.
+   --seteando un limite para no caer en un bucle infinito.
    while loop do
     
         loop = false
