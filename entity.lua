@@ -18,6 +18,10 @@ function Entity:new(x, y, image_path)
     --esta fuerza temporal es la que se sumará a la fuerza de la caja para superar a la del player cuando el player empuje la caja contra la pared.
     self.tempStrength = 0
 
+    --añado propiedades gravity y weight para dar un efecto de gravedad mejor logrado
+    self.gravity = 0
+    self.weight = 400
+
 end
 
 
@@ -27,6 +31,12 @@ function Entity:update(dt)
     self.last.y = self.y
 
     self.tempStrength = self.strength
+
+    --incrementamos la gravity usando el weight
+    self.gravity = self.gravity + self.weight * dt
+
+    --incrementamos la posicion en Y
+    self.y = self.y + self.gravity * dt
 end
 
 
@@ -82,6 +92,11 @@ function Entity:resolveCollision(e)
             if self.y + self.height/2 < e.y + e.height/2 then
                 local pushback = self.y + self.height - e.y
                 self.y = self.y - pushback
+                --si estamos tocando una pared desde la parte de abajo
+                --esto significa que estamos en el piso
+                --entonces reseteamos la gravity del objeto.
+                --(si no hacemos esto el player y la box eventualmente traspasan el suelo ya que nunca deja de sumar gravedad)
+                self.gravity = 0
             else
                 local pushback = e.y + e.height - self.y
                 self.y = self.y + pushback
