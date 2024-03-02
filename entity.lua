@@ -21,7 +21,6 @@ function Entity:new(x, y, image_path)
     --añado propiedades gravity y weight para dar un efecto de gravedad mejor logrado
     self.gravity = 0
     self.weight = 400
-
 end
 
 
@@ -82,24 +81,15 @@ function Entity:resolveCollision(e)
         
         if self:wasVerticallyAligned(e) then
             if self.x + self.width/2 < e.x + e.width/2 then
-                local pushback = self.x + self.width - e.x
-                self.x = self.x - pushback
+                self:collide(e, "right")
             else
-                local pushback = e.x + e.width - self.x
-                self.x = self.x + pushback
+                self:collide(e, "left")
             end
         elseif self:wasHorizontallyAligned(e) then
             if self.y + self.height/2 < e.y + e.height/2 then
-                local pushback = self.y + self.height - e.y
-                self.y = self.y - pushback
-                --si estamos tocando una pared desde la parte de abajo
-                --esto significa que estamos en el piso
-                --entonces reseteamos la gravity del objeto.
-                --(si no hacemos esto el player y la box eventualmente traspasan el suelo ya que nunca deja de sumar gravedad)
-                self.gravity = 0
+                self:collide(e, "bottom")
             else
-                local pushback = e.y + e.height - self.y
-                self.y = self.y + pushback
+               self:collide(e, "up")
             end
         end
         --hubo colision
@@ -108,4 +98,22 @@ function Entity:resolveCollision(e)
     end
     --de no haber colision return false (tambien podria no retornar nada)
     return false
+end
+
+--ponemos la direccion de donde vienen las colision en una function aparta para poder sobreescribirla en el player y asi setear el canJump en true
+function Entity:collide(e, direction)
+    if direction == "right" then
+        local pushback = self.x + self.width - e.x
+        self.x = self.x - pushback
+    elseif direction == "left" then
+        local pushback = e.x + e.width - self.x
+        self.x = self.x + pushback
+    elseif direction == "bottom" then
+        local pushback = self.y + self.height - e.y
+        self.y = self.y - pushback
+        self.gravity = 0
+    elseif direction == "top" then
+        local pushback = e.y + e.height - self.y
+        self.y = self.y + pushback
+    end
 end
