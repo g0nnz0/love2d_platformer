@@ -101,7 +101,7 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
-    if key == "up" then
+    if key == "space" then
         player:jump()
     end
 end

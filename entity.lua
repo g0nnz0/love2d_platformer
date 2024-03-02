@@ -81,23 +81,43 @@ function Entity:resolveCollision(e)
         
         if self:wasVerticallyAligned(e) then
             if self.x + self.width/2 < e.x + e.width/2 then
-                self:collide(e, "right")
+                --llamamos a checkResolve para ambas participantes en la colision
+                local a = self:checkResolve(e, "right")
+                local b = e:checkResolve(self, "left")
+                --si ambas son true, resolver la collision
+                if a and b then
+                    self:collide(e, "right")
+                end
             else
-                self:collide(e, "left")
+                local a = self:checkResolve(e, "left")
+                local b = e:checkResolve(self, "right")
+                if a and b then
+                    self:collide(e, "left")
+                end
             end
         elseif self:wasHorizontallyAligned(e) then
             if self.y + self.height/2 < e.y + e.height/2 then
-                self:collide(e, "bottom")
+                local a = self:checkResolve(e, "bottom")
+                local b = e:checkResolve(self, "top")
+                if a and b then
+                    self:collide(e, "bottom")
+                end
             else
-               self:collide(e, "up")
+                local a = self:checkResolve(e, "bottom")
+                local b = e:checkResolve(self, "top")
+                if a and b then
+                    self:collide(e, "top")
+                end
             end
         end
         --hubo colision
         return true
 
     end
-    --de no haber colision return false (tambien podria no retornar nada)
-    return false
+    --esto estaba en false y funcionaba bien hasta el ultimo paso del tutorial
+    --leyendo comentarios vi que uno tenia el mismo error que yo, el player pasaba de largo al querer subirse a la box
+    --al poner esto en true, se soluciona el error, aunque no termino de entender porque
+    return true
 end
 
 --ponemos la direccion de donde vienen las colision en una function aparta para poder sobreescribirla en el player y asi setear el canJump en true
@@ -116,4 +136,11 @@ function Entity:collide(e, direction)
         local pushback = e.y + e.height - self.y
         self.y = self.y + pushback
     end
+end
+
+--para agregar la functionality de atravesar la caja si colisionamos con ella horizontalmente
+--pero quedarnos encima de ella si colisionamos desde arriba, debemos crear una function que checkee si ambas partes de la colision quieren resolver la colision
+--usaremos esta function en el resolveColission
+function Entity:checkResolve(e, direction)
+    return true
 end

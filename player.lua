@@ -39,3 +39,16 @@ function Player:collide(e, direction)
         self.canJump = true
     end
 end
+
+--sobreescribimos la function checkResolve() para checkear si (e) es una Box, si lo es la atravesara por los costados y se apoyara si colisiona por arriba
+function Player:checkResolve(e, direction)
+    if e:is(Box) then
+        if direction == "bottom" then
+            print("canjump")
+            return true
+        else
+            return false
+        end
+    end
+    return true
+end
